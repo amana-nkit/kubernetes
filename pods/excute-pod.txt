@@ -1,0 +1,69 @@
+root@AZ-VM001:~# kubectl version --short
+Client Version: v1.21.2
+Server Version: v1.21.2
+root@AZ-VM001:~# kubectl run pod1 --image nginx
+pod/pod1 created
+root@AZ-VM001:~# kubectl get pods
+NAME   READY   STATUS    RESTARTS   AGE
+pod1   1/1     Running   0          16s
+root@AZ-VM001:~# kubectl get pods -o wide
+NAME   READY   STATUS    RESTARTS   AGE   IP          NODE       NOMINATED NODE   READINESS GATES
+pod1   1/1     Running   0          25s   10.36.0.1   az-vm003   <none>           <none>
+root@AZ-VM001:~# kubectl describe pod pod1
+root@AZ-VM001:~# kubectl delete pod pod1
+pod "pod1" deleted
+root@AZ-VM001:~# kubectl api-resources
+root@AZ-VM001:~# vi pod.yml
+root@AZ-VM001:~# cat pod.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: amanpod
+  labels:
+     env: prod
+     app: customerapp
+spec:
+  containers:
+      - name: one
+        image: httpd
+root@AZ-VM001:~# kubectl create -f pod.yml
+pod/amanpod created
+root@AZ-VM001:~# kubectl get pods -o wide
+NAME      READY   STATUS    RESTARTS   AGE   IP          NODE       NOMINATED NODE   READINESS GATES
+amanpod   1/1     Running   0          45s   10.36.0.1   az-vm003   <none>           <none>
+root@AZ-VM001:~# kubectl exec -it amanpod -- bash
+root@AZ-VM001:~# kubectl logs amanpod
+AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using 10.36.0.1. Set the 'ServerName' directive globally to suppress this message
+AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using 10.36.0.1. Set the 'ServerName' directive globally to suppress this message
+[Wed Jul 14 19:22:29.866574 2021] [mpm_event:notice] [pid 1:tid 140192860038272] AH00489: Apache/2.4.48 (Unix) configured -- resuming normal operations
+[Wed Jul 14 19:22:29.866760 2021] [core:notice] [pid 1:tid 140192860038272] AH00094: Command line: 'httpd -D FOREGROUND'
+root@AZ-VM001:~# kubectl explain pod.metadata.labels
+KIND:     Pod
+VERSION:  v1
+
+FIELD:    labels <map[string]string>
+
+DESCRIPTION:
+     Map of string keys and values that can be used to organize and categorize
+     (scope and select) objects. May match selectors of replication controllers
+     and services. More info: http://kubernetes.io/docs/user-guide/labels
+
+root@AZ-VM001:~# kubectl run pod1 --image nginx --dry-run=client -o yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: pod1
+  name: pod1
+spec:
+  containers:
+  - image: nginx
+    name: pod1
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+
+
