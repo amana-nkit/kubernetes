@@ -1,0 +1,33 @@
+root@AZ-VM001:~# kubectl create -f https://raw.githubusercontent.com/amana-nkit/kubernetes/main/storage/vol-emptyDir.yml
+pod/myvolumes-pod created
+
+root@AZ-VM001:~# kubectl get pods
+NAME                         READY   STATUS    RESTARTS   AGE
+amanpod                      1/1     Running   2          45h
+kubeserve-6975497d98-5slxj   1/1     Running   1          15h
+kubeserve-6975497d98-6zpjq   1/1     Running   1          15h
+kubeserve-6975497d98-d45cb   1/1     Running   0          54m
+kubeserve-6975497d98-qv8rb   1/1     Running   1          15h
+kubeserve-6975497d98-wmlmb   1/1     Running   0          54m
+kubeserve-6975497d98-x7tb4   1/1     Running   0          54m
+kubeserve-6975497d98-xzcjw   1/1     Running   1          15h
+kubeserve-6975497d98-z9pbc   1/1     Running   1          15h
+kubeserve-6975497d98-zkb4b   1/1     Running   0          53m
+kubeserve-6975497d98-zstzq   1/1     Running   1          15h
+myrs-7sv9q                   1/1     Running   1          15h
+myrs-9xb8t                   1/1     Running   1          16h
+myrs-ft6f7                   1/1     Running   1          15h
+myrs-n9knf                   1/1     Running   1          16h
+myvolumes-pod                3/3     Running   0          19s
+nginx-5d69f49cdc-2p7l4       1/1     Running   0          38m
+nginx-5d69f49cdc-77h4w       1/1     Running   0          38m
+nginx-5d69f49cdc-kfhfc       1/1     Running   0          38m
+
+root@AZ-VM001:~# kubectl exec -it myvolumes-pod -c myvolumes-container-1 -- bash
+[root@myvolumes-pod /]# cd demo1/
+
+[root@myvolumes-pod demo1]# touch amanupdates
+
+[root@myvolumes-pod demo1]# exec attach failed: error on attach stdin: read escape sequence
+command terminated with exit code 126
+
