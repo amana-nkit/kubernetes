@@ -31,3 +31,4 @@ root@AZ-VM001:~# kubectl exec -it myvolumes-pod -c myvolumes-container-1 -- bash
 [root@myvolumes-pod demo1]# exec attach failed: error on attach stdin: read escape sequence
 command terminated with exit code 126
 
+Used to share data across container from a single pod. Mount the multiple container to share data
