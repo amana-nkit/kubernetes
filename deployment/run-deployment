@@ -1,0 +1,94 @@
+root@AZ-VM001:~# kubectl create -f https://raw.githubusercontent.com/amana-nkit/kubernetes/main/deployment/deployment.yml
+deployment.apps/kubeserve created
+service/kubeserve-svc created
+root@AZ-VM001:~# kubectl get all
+NAME                             READY   STATUS              RESTARTS   AGE
+pod/amanpod                      1/1     Running             1          30h
+pod/kubeserve-6975497d98-bk5zp   0/1     ContainerCreating   0          12s
+pod/kubeserve-6975497d98-hqtmh   0/1     ContainerCreating   0          12s
+pod/kubeserve-6975497d98-mh2gk   0/1     ContainerCreating   0          12s
+pod/kubeserve-6975497d98-pd4pk   0/1     ContainerCreating   0          12s
+pod/kubeserve-6975497d98-qmftx   0/1     ContainerCreating   0          12s
+pod/kubeserve-6975497d98-qmrfm   0/1     ContainerCreating   0          12s
+pod/kubeserve-6975497d98-v5vf9   0/1     ContainerCreating   0          12s
+pod/kubeserve-6975497d98-w28sd   0/1     ContainerCreating   0          12s
+pod/kubeserve-6975497d98-wnt8t   0/1     ContainerCreating   0          12s
+pod/kubeserve-6975497d98-x9qbh   0/1     ContainerCreating   0          12s
+pod/myrs-7sv9q                   1/1     Running             0          34m
+pod/myrs-9xb8t                   1/1     Running             0          55m
+pod/myrs-ft6f7                   1/1     Running             0          34m
+pod/myrs-n9knf                   1/1     Running             0          55m
+
+NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes      ClusterIP   10.96.0.1        <none>        443/TCP        30h
+service/kubeserve-svc   NodePort    10.108.226.57    <none>        80:31807/TCP   12s
+service/mysvc           NodePort    10.108.97.60     <none>        80:30005/TCP   55m
+service/svc1            ClusterIP   10.110.152.139   <none>        1234/TCP       119m
+
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/kubeserve   0/10    10           0           12s
+
+NAME                                   DESIRED   CURRENT   READY   AGE
+replicaset.apps/kubeserve-6975497d98   10        10        0       12s
+replicaset.apps/myrs                   4         4         4       55m
+root@AZ-VM001:~# kubectl get pods -o wide
+NAME                         READY   STATUS    RESTARTS   AGE   IP          NODE       NOMINATED NODE   READINESS GATES
+amanpod                      1/1     Running   1          30h   10.36.0.1   az-vm003   <none>           <none>
+kubeserve-6975497d98-bk5zp   1/1     Running   0          57s   10.44.0.6   az-vm002   <none>           <none>
+kubeserve-6975497d98-hqtmh   1/1     Running   0          57s   10.44.0.3   az-vm002   <none>           <none>
+kubeserve-6975497d98-mh2gk   1/1     Running   0          57s   10.36.0.6   az-vm003   <none>           <none>
+kubeserve-6975497d98-pd4pk   1/1     Running   0          57s   10.44.0.7   az-vm002   <none>           <none>
+kubeserve-6975497d98-qmftx   1/1     Running   0          57s   10.36.0.7   az-vm003   <none>           <none>
+kubeserve-6975497d98-qmrfm   1/1     Running   0          57s   10.44.0.4   az-vm002   <none>           <none>
+kubeserve-6975497d98-v5vf9   1/1     Running   0          57s   10.36.0.5   az-vm003   <none>           <none>
+kubeserve-6975497d98-w28sd   1/1     Running   0          57s   10.44.0.5   az-vm002   <none>           <none>
+kubeserve-6975497d98-wnt8t   1/1     Running   0          57s   10.36.0.4   az-vm003   <none>           <none>
+kubeserve-6975497d98-x9qbh   1/1     Running   0          57s   10.44.0.8   az-vm002   <none>           <none>
+myrs-7sv9q                   1/1     Running   0          35m   10.36.0.2   az-vm003   <none>           <none>
+myrs-9xb8t                   1/1     Running   0          56m   10.36.0.3   az-vm003   <none>           <none>
+myrs-ft6f7                   1/1     Running   0          35m   10.44.0.1   az-vm002   <none>           <none>
+myrs-n9knf                   1/1     Running   0          56m   10.44.0.2   az-vm002   <none>           <none>
+root@AZ-VM001:~# kubectl get svc
+NAME            TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+kubernetes      ClusterIP   10.96.0.1        <none>        443/TCP        31h
+kubeserve-svc   NodePort    10.108.226.57    <none>        80:31807/TCP   75s
+mysvc           NodePort    10.108.97.60     <none>        80:30005/TCP   56m
+svc1            ClusterIP   10.110.152.139   <none>        1234/TCP       120m
+root@AZ-VM001:~# kubectl set image deploy kubeserve app=leaddevops/kubeserve:v2
+deployment.apps/kubeserve image updated
+root@AZ-VM001:~# kubectl rollout status deploy kubeserve
+Waiting for deployment "kubeserve" rollout to finish: 3 out of 10 new replicas have been updated...
+Waiting for deployment "kubeserve" rollout to finish: 3 out of 10 new replicas have been updated...
+Waiting for deployment "kubeserve" rollout to finish: 3 out of 10 new replicas have been updated...
+Waiting for deployment "kubeserve" rollout to finish: 6 out of 10 new replicas have been updated...
+Waiting for deployment "kubeserve" rollout to finish: 6 out of 10 new replicas have been updated...
+Waiting for deployment "kubeserve" rollout to finish: 6 out of 10 new replicas have been updated...
+Waiting for deployment "kubeserve" rollout to finish: 6 out of 10 new replicas have been updated...
+Waiting for deployment "kubeserve" rollout to finish: 6 out of 10 new replicas have been updated...
+Waiting for deployment "kubeserve" rollout to finish: 9 out of 10 new replicas have been updated...
+Waiting for deployment "kubeserve" rollout to finish: 9 out of 10 new replicas have been updated...
+Waiting for deployment "kubeserve" rollout to finish: 9 out of 10 new replicas have been updated...
+Waiting for deployment "kubeserve" rollout to finish: 9 out of 10 new replicas have been updated...
+Waiting for deployment "kubeserve" rollout to finish: 9 out of 10 new replicas have been updated...
+
+root@AZ-VM001:~# kubectl rollout history deploy kubeserve
+deployment.apps/kubeserve
+REVISION  CHANGE-CAUSE
+1         <none>
+2         <none>
+
+root@AZ-VM001:~# kubectl set image deploy kubeserve app=leaddevops/kubeserve:v3
+deployment.apps/kubeserve image updated
+root@AZ-VM001:~# kubectl rollout status deploy kubeserve
+Waiting for deployment "kubeserve" rollout to finish: 3 out of 10 new replicas have been updated...
+Waiting for deployment "kubeserve" rollout to finish: 3 out of 10 new replicas have been updated...
+Waiting for deployment "kubeserve" rollout to finish: 3 out of 10 new replicas have been updated...
+Waiting for deployment "kubeserve" rollout to finish: 6 out of 10 new replicas have been updated...
+Waiting for deployment "kubeserve" rollout to finish: 6 out of 10 new replicas have been updated...
+Waiting for deployment "kubeserve" rollout to finish: 6 out of 10 new replicas have been updated...
+Waiting for deployment "kubeserve" rollout to finish: 6 out of 10 new replicas have been updated...
+
+[Rollback]
+
+^Croot@AZ-VM001:~# kubectl rollout undo deployment kubeserve --to-revision=1
+deployment.apps/kubeserve rolled back
