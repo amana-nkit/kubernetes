@@ -1,0 +1,79 @@
+Controllers:-
+
+High Availability
+Zero downtime deployment
+Rolling updates
+Application access load balancing
+
+HPA - Horizontal Pod autoscaling
+
+root@AZ-VM001:~# kubectl create -f https://raw.githubusercontent.com/amana-nkit/kubernetes/main/HPA/hpa.yml
+deployment.apps/nginx created
+service/nginx-svc created
+horizontalpodautoscaler.autoscaling/nginx-hpa created
+
+root@AZ-VM001:~# git clone https://github.com/amana-nkit/kubernetes
+Cloning into 'kubernetes'...
+remote: Enumerating objects: 103, done.
+remote: Counting objects: 100% (103/103), done.
+remote: Compressing objects: 100% (90/90), done.
+remote: Total 103 (delta 29), reused 0 (delta 0), pack-reused 0
+Receiving objects: 100% (103/103), 26.70 KiB | 3.81 MiB/s, done.
+Resolving deltas: 100% (29/29), done.
+
+root@AZ-VM001:~/kubernetes/HPA# cd metrics-server
+
+root@AZ-VM001:~/kubernetes/HPA/metrics-server# ls
+aggregated-metrics-reader.yaml  auth-reader.yaml         metrics-server-deployment.yaml  resource-reader.yaml
+auth-delegator.yaml             metrics-apiservice.yaml  metrics-server-service.yaml     rm-metrics-server.sh
+
+root@AZ-VM001:~/kubernetes/HPA/metrics-server# kubectl create -f .
+clusterrole.rbac.authorization.k8s.io/system:aggregated-metrics-reader created
+clusterrolebinding.rbac.authorization.k8s.io/metrics-server:system:auth-delegator created
+rolebinding.rbac.authorization.k8s.io/metrics-server-auth-reader created
+Warning: apiregistration.k8s.io/v1beta1 APIService is deprecated in v1.19+, unavailable in v1.22+; use apiregistration.k8s.io/v1 APIService
+apiservice.apiregistration.k8s.io/v1beta1.metrics.k8s.io created
+serviceaccount/metrics-server created
+deployment.apps/metrics-server created
+service/metrics-server created
+clusterrole.rbac.authorization.k8s.io/system:metrics-server created
+clusterrolebinding.rbac.authorization.k8s.io/system:metrics-server created
+
+root@AZ-VM001:~/kubernetes/HPA/metrics-server# kubectl top nodes
+W0716 16:07:02.007541   21317 top_node.go:119] Using json format to get metrics. Next release will switch to protocol-buffers, switch early by passing --use-protocol-buffers flag
+NAME       CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%
+az-vm001   598m         29%    2126Mi          55%
+az-vm002   60m          3%     1014Mi          26%
+az-vm003   102m         5%     1015Mi          26%
+root@AZ-VM001:~/kubernetes/HPA/metrics-server# apt-get install apache2-utils
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+The following additional packages will be installed:
+  libapr1 libaprutil1
+The following NEW packages will be installed:
+  apache2-utils libapr1 libaprutil1
+0 upgraded, 3 newly installed, 0 to remove and 8 not upgraded.
+Need to get 260 kB of archives.
+After this operation, 969 kB of additional disk space will be used.
+Do you want to continue? [Y/n] y
+Get:1 http://azure.archive.ubuntu.com/ubuntu focal/main amd64 libapr1 amd64 1.6.5-1ubuntu1 [91.4 kB]
+Get:2 http://azure.archive.ubuntu.com/ubuntu focal/main amd64 libaprutil1 amd64 1.6.1-4ubuntu2 [84.7 kB]
+Get:3 http://azure.archive.ubuntu.com/ubuntu focal-updates/main amd64 apache2-utils amd64 2.4.41-4ubuntu3.4 [84.0 kB]
+Fetched 260 kB in 0s (6683 kB/s)
+Selecting previously unselected package libapr1:amd64.
+(Reading database ... 85981 files and directories currently installed.)
+Preparing to unpack .../libapr1_1.6.5-1ubuntu1_amd64.deb ...
+Unpacking libapr1:amd64 (1.6.5-1ubuntu1) ...
+Selecting previously unselected package libaprutil1:amd64.
+Preparing to unpack .../libaprutil1_1.6.1-4ubuntu2_amd64.deb ...
+Unpacking libaprutil1:amd64 (1.6.1-4ubuntu2) ...
+Selecting previously unselected package apache2-utils.
+Preparing to unpack .../apache2-utils_2.4.41-4ubuntu3.4_amd64.deb ...
+Unpacking apache2-utils (2.4.41-4ubuntu3.4) ...
+Setting up libapr1:amd64 (1.6.5-1ubuntu1) ...
+Setting up libaprutil1:amd64 (1.6.1-4ubuntu2) ...
+Setting up apache2-utils (2.4.41-4ubuntu3.4) ...
+Processing triggers for man-db (2.9.1-1) ...
+Processing triggers for libc-bin (2.31-0ubuntu9.2) ...
+
