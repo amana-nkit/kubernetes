@@ -1,0 +1,36 @@
+root@AZ-VM001:~# kubectl get pv
+No resources found
+root@AZ-VM001:~# kubectl create -f https://raw.githubusercontent.com/amana-nkit/kubernetes/main/storage/pv.yml
+persistentvolume/my-pv created
+root@AZ-VM001:~# kubectl get pv
+NAME    CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   REASON   AGE
+my-pv   1000Mi     RWO            Recycle          Available           standard                8s
+root@AZ-VM001:~# kubectl create -f https://raw.githubusercontent.com/amana-nkit/kubernetes/main/storage/pvc.yml
+persistentvolumeclaim/my-pvc created
+root@AZ-VM001:~# kubectl get pvc
+NAME     STATUS   VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+my-pvc   Bound    my-pv    1000Mi     RWO            standard       9s
+root@AZ-VM001:~# kubectl create -f https://raw.githubusercontent.com/amana-nkit/kubernetes/main/storage/pvc-hostpath-pod.yml
+pod/pvc-pod created
+root@AZ-VM001:~# kubectl get pods -o wide
+NAME                         READY   STATUS              RESTARTS   AGE   IP           NODE       NOMINATED NODE   READINESS GATES
+amanpod                      1/1     Running             2          45h   10.36.0.1    az-vm003   <none>           <none>
+kubeserve-6975497d98-5slxj   1/1     Running             1          15h   10.44.0.3    az-vm002   <none>           <none>
+kubeserve-6975497d98-6zpjq   1/1     Running             1          15h   10.36.0.5    az-vm003   <none>           <none>
+kubeserve-6975497d98-d45cb   1/1     Running             0          72m   10.44.0.10   az-vm002   <none>           <none>
+kubeserve-6975497d98-qv8rb   1/1     Running             1          15h   10.36.0.10   az-vm003   <none>           <none>
+kubeserve-6975497d98-wmlmb   1/1     Running             0          72m   10.44.0.7    az-vm002   <none>           <none>
+kubeserve-6975497d98-x7tb4   1/1     Running             0          72m   10.44.0.8    az-vm002   <none>           <none>
+kubeserve-6975497d98-xzcjw   1/1     Running             1          15h   10.36.0.8    az-vm003   <none>           <none>
+kubeserve-6975497d98-z9pbc   1/1     Running             1          15h   10.36.0.6    az-vm003   <none>           <none>
+kubeserve-6975497d98-zkb4b   1/1     Running             0          71m   10.36.0.4    az-vm003   <none>           <none>
+kubeserve-6975497d98-zstzq   1/1     Running             1          15h   10.36.0.9    az-vm003   <none>           <none>
+myrs-7sv9q                   1/1     Running             1          16h   10.36.0.2    az-vm003   <none>           <none>
+myrs-9xb8t                   1/1     Running             1          16h   10.36.0.3    az-vm003   <none>           <none>
+myrs-ft6f7                   1/1     Running             1          16h   10.44.0.1    az-vm002   <none>           <none>
+myrs-n9knf                   1/1     Running             1          16h   10.44.0.2    az-vm002   <none>           <none>
+myvolumes-pod                3/3     Running             0          18m   10.44.0.6    az-vm002   <none>           <none>
+nginx-5d69f49cdc-2p7l4       1/1     Running             0          56m   10.36.0.7    az-vm003   <none>           <none>
+nginx-5d69f49cdc-77h4w       1/1     Running             0          56m   10.44.0.4    az-vm002   <none>           <none>
+nginx-5d69f49cdc-kfhfc       1/1     Running             0          56m   10.44.0.5    az-vm002   <none>           <none>
+pvc-pod                      0/1     ContainerCreating   0          11s   <none>       az-vm003   <none>           <none>
