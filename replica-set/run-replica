@@ -1,0 +1,59 @@
+root@AZ-VM001:~# kubectl create -f https://raw.githubusercontent.com/amana-nkit/kubernetes/main/replica-set/rs.yml
+replicaset.apps/myrs created
+service/mysvc created
+
+root@AZ-VM001:~# kubectl get rs
+NAME   DESIRED   CURRENT   READY   AGE
+myrs   4         4         4       14m
+
+root@AZ-VM001:~# kubectl get svc
+NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP        30h
+mysvc        NodePort    10.108.97.60     <none>        80:30005/TCP   14m
+svc1         ClusterIP   10.110.152.139   <none>        1234/TCP       78m
+
+root@AZ-VM001:~# kubectl get pods
+NAME         READY   STATUS    RESTARTS   AGE
+amanpod      1/1     Running   1          29h
+myrs-9xb8t   1/1     Running   0          15m
+myrs-m9br7   1/1     Running   0          15m
+myrs-n9knf   1/1     Running   0          15m
+myrs-rtc5s   1/1     Running   0          15m
+pod1         1/1     Running   0          119m
+
+root@AZ-VM001:~# kubectl delete pod pod1
+pod "pod1" deleted
+
+root@AZ-VM001:~# kubectl get pods
+NAME         READY   STATUS    RESTARTS   AGE
+amanpod      1/1     Running   1          29h
+myrs-9xb8t   1/1     Running   0          15m
+myrs-m9br7   1/1     Running   0          15m
+myrs-n9knf   1/1     Running   0          15m
+myrs-rtc5s   1/1     Running   0          15m
+
+root@AZ-VM001:~# kubectl scale rs myrs --replicas 7
+replicaset.apps/myrs scaled
+
+root@AZ-VM001:~# kubectl get pods
+NAME         READY   STATUS    RESTARTS   AGE
+amanpod      1/1     Running   1          29h
+myrs-9xb8t   1/1     Running   0          16m
+myrs-bbqpq   1/1     Running   0          7s
+myrs-j65mw   1/1     Running   0          7s
+myrs-m9br7   1/1     Running   0          16m
+myrs-n9knf   1/1     Running   0          16m
+myrs-qjjql   1/1     Running   0          7s
+myrs-rtc5s   1/1     Running   0          16m
+
+root@AZ-VM001:~# kubectl scale rs myrs --replicas 2
+replicaset.apps/myrs scaled
+
+root@AZ-VM001:~# kubectl get pods
+NAME         READY   STATUS        RESTARTS   AGE
+amanpod      1/1     Running       1          29h
+myrs-9xb8t   1/1     Running       0          17m
+myrs-bbqpq   0/1     Terminating   0          29s
+myrs-n9knf   1/1     Running       0          17m
+myrs-qjjql   0/1     Terminating   0          29s
+myrs-rtc5s   0/1     Terminating   0          17m
