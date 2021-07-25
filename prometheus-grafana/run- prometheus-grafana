@@ -1,0 +1,73 @@
+root@Controller:~/kubernetes/prometheus-grafana/kube-state-metrics/standard# ls
+cluster-role-binding.yaml  cluster-role.yaml  deployment.yaml  service-account.yaml  service.yaml
+
+root@Controller:~/kubernetes/prometheus-grafana/kube-state-metrics/standard# kubectl create -f .
+clusterrolebinding.rbac.authorization.k8s.io/kube-state-metrics created
+clusterrole.rbac.authorization.k8s.io/kube-state-metrics created
+deployment.apps/kube-state-metrics created
+serviceaccount/kube-state-metrics created
+service/kube-state-metrics created
+
+root@Controller:~/kubernetes/prometheus-grafana# kubectl create -f prometheus.yaml
+namespace/monitoring created
+configmap/prom-server-conf created
+Warning: rbac.authorization.k8s.io/v1beta1 ClusterRole is deprecated in v1.17+, unavailable in v1.22+; use rbac.authorization.k8s.io/v1 ClusterRole
+clusterrole.rbac.authorization.k8s.io/prometheus created
+Warning: rbac.authorization.k8s.io/v1beta1 ClusterRoleBinding is deprecated in v1.17+, unavailable in v1.22+; use rbac.authorization.k8s.io/v1 ClusterRoleBinding
+clusterrolebinding.rbac.authorization.k8s.io/prometheus created
+deployment.apps/prometheus-deployment created
+service/prometheus-service created
+
+root@Controller:~/kubernetes/prometheus-grafana# kubectl get all
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   6d3h
+
+root@Controller:~/kubernetes/prometheus-grafana# kubectl get ns
+NAME              STATUS   AGE
+default           Active   6d3h
+kube-node-lease   Active   6d3h
+kube-public       Active   6d3h
+kube-system       Active   6d3h
+monitoring        Active   27s
+
+root@Controller:~/kubernetes/prometheus-grafana# kubectl get all -n monitoring
+NAME                                         READY   STATUS    RESTARTS   AGE
+pod/prometheus-deployment-58f6fb464b-tnll8   0/1     Pending   0          44s
+
+NAME                         TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+service/prometheus-service   NodePort   10.98.240.237   <none>        8080:30345/TCP   44s
+
+NAME                                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/prometheus-deployment   0/1     1            0           44s
+
+
+root@Controller:~/kubernetes/prometheus-grafana# kubectl create deploy deploy1 --image nginx
+deployment.apps/deploy1 created
+root@Controller:~/kubernetes/prometheus-grafana# kubectl scale deploy deploy1 --replicas 6
+deployment.apps/deploy1 scaled
+
+root@Controller:~/kubernetes/prometheus-grafana# kubectl create -f grafana.yml
+deployment.apps/grafana created
+service/grafana-ui-svc created
+Error from server (AlreadyExists): error when creating "grafana.yml": namespaces "monitoring" already exists
+
+root@Controller:~/kubernetes/prometheus-grafana# kubectl get all -n monitoring
+NAME                                         READY   STATUS    RESTARTS   AGE
+pod/grafana-5b9dd4bfd-qvqkq                  1/1     Running   0          89s
+pod/prometheus-deployment-58f6fb464b-tnll8   1/1     Running   0          21m
+
+NAME                         TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+service/grafana-ui-svc       NodePort   10.100.68.62    <none>        3000:32389/TCP   89s
+service/prometheus-service   NodePort   10.98.240.237   <none>        8080:30345/TCP   21m
+
+NAME                                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/grafana                 1/1     1            1           89s
+deployment.apps/prometheus-deployment   1/1     1            1           21m
+
+NAME                                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/grafana-5b9dd4bfd                  1         1         1       89s
+replicaset.apps/prometheus-deployment-58f6fb464b   1         1         1       21m
+
+Add Prometheus monitoring url to Grafana dashboard
+Add dashboard (6417)
+
